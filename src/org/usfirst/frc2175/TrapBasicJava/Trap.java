@@ -53,7 +53,7 @@ public class Trap extends IterativeRobot {
         drivetrainRobotDrive = new RobotDrive(drivetrainLeft, drivetrainRight);
 	
         drivetrainRobotDrive.setSafetyEnabled(true);
-        drivetrainRobotDrive.setExpiration(10.0);
+        drivetrainRobotDrive.setExpiration(0.1);
         drivetrainRobotDrive.setSensitivity(0.5);
         drivetrainRobotDrive.setMaxOutput(1.0);
         
@@ -98,6 +98,10 @@ public class Trap extends IterativeRobot {
      */
     public void teleopPeriodic() {
         double forward = leftStick.getRawAxis(1);
+        double limit = leftStick.getRawAxis(3);
+        double lim_ratio = Math.abs(limit/forward);
+        if (lim_ratio < 1.0)
+            forward *= lim_ratio;
         double steer = rightStick.getRawAxis(2);
         drivetrainRobotDrive.arcadeDrive(forward, steer);
         drivetrainShifters.set(DoubleSolenoid.Value.kReverse);
