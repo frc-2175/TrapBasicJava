@@ -32,7 +32,7 @@ public class Trap extends IterativeRobot {
     SpeedController drivetrainLeft;
     SpeedController drivetrainRight;
     RobotDrive drivetrainRobotDrive;
-    DoubleSolenoid drivetrainShifters;
+    Solenoid drivetrainShifters;
     Solenoid shooterPlunger;
     SpeedController shooterWheels;
     //DoubleSolenoid hatchet;
@@ -57,9 +57,9 @@ public class Trap extends IterativeRobot {
         drivetrainRobotDrive.setSensitivity(0.5);
         drivetrainRobotDrive.setMaxOutput(1.0);
         
-        drivetrainShifters = new DoubleSolenoid(1, 1, 2);
-       	LiveWindow.addActuator("Drivetrain", "Shifters", (DoubleSolenoid) drivetrainShifters);
-        drivetrainShifters.set(DoubleSolenoid.Value.kReverse);
+        drivetrainShifters = new Solenoid(1, 4);
+       	LiveWindow.addActuator("Drivetrain", "Shifters", (Solenoid) drivetrainShifters);
+        drivetrainShifters.set(false);
         
         shooterPlunger = new Solenoid(1, 3);
        	LiveWindow.addActuator("Shooter", "Plunger", (Solenoid) shooterPlunger);
@@ -68,12 +68,12 @@ public class Trap extends IterativeRobot {
         shooterWheels = new Talon(1, 3);
 	LiveWindow.addActuator("Shooter", "Shooter Wheels", (Talon) shooterWheels);
         
-        /*hatchet = new DoubleSolenoid(1, 4, 5);
+        /*hatchet = new DoubleSolenoid(1, 1, 2);
        	LiveWindow.addActuator("Hatchet", "Hatchet", (DoubleSolenoid) hatchet);
         hatchetUp = false;
         hatchet.set(DoubleSolenoid.Value.kReverse);*/
         
-        compressor = new Compressor(1, 1, 1, 1);
+        compressor = new Compressor(1, 14, 1, 1);
         compressor.start();
         
         leftStick = new Joystick(1);
@@ -85,7 +85,7 @@ public class Trap extends IterativeRobot {
      */
     public void autonomousPeriodic() {
         drivetrainRobotDrive.arcadeDrive(0.0,0.0);
-        drivetrainShifters.set(DoubleSolenoid.Value.kReverse);
+        drivetrainShifters.set(false);
         
         shooterWheels.set(0.0);
         shooterPlunger.set(false);
@@ -104,11 +104,11 @@ public class Trap extends IterativeRobot {
             forward *= lim_ratio;
         double steer = rightStick.getRawAxis(2);
         drivetrainRobotDrive.arcadeDrive(forward, steer);
-        drivetrainShifters.set(DoubleSolenoid.Value.kReverse);
+        drivetrainShifters.set(false);
         
         boolean spinWheels = leftStick.getRawButton(1);
         boolean fire = rightStick.getRawButton(1);
-        shooterWheels.set(spinWheels?1.0:0.0);
+        shooterWheels.set(spinWheels?-0.6:0.0);
         shooterPlunger.set(fire);
         
         
